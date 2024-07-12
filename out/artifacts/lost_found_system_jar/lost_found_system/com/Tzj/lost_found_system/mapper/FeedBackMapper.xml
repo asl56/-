@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.Tzj.lost_found_system.mapper.FeedBackMapper">
+
+    <select id="getFeedBack" resultType="com.Tzj.lost_found_system.pojo.FeedBack">
+        select feedback.*,user.name from feedback left join user on feedback.userID = user.id
+        <where>
+            <if test="id!='' and id!=null">
+                feedback.id=#{id}
+            </if>
+            <if test="content!='' and content!=null">
+               and content like concat('%',#{content},'%')
+            </if>
+            <if test="released!='' and released!=null">
+                and feedback.released=#{released}
+            </if>
+            <if test="userID!='' and userID!=null">
+                and userID=#{userID}
+            </if>
+        </where>
+        order by  feedback.id desc
+    </select>
+
+</mapper>

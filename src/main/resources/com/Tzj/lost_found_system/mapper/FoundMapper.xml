@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.Tzj.lost_found_system.mapper.FoundMapper">
+    <update id="editFound">
+        update found
+        <set>
+            <if test="title!=null and title!=''">
+                title=#{title}
+            </if>
+            <if test="description!=null and description!=''">
+                ,description=#{description}
+            </if>
+            <if test="phone!=null and phone!=''">
+                ,phone=#{phone}
+            </if>
+            <if test="ItemPhoto!=null and ItemPhoto!=''">
+                ,ItemPhoto=#{ItemPhoto}
+            </if>
+            <if test="statusID!=null and statusID!=''">
+                ,statusID=#{statusID}
+            </if>
+        </set>
+        where id=#{id}
+    </update>
+
+    <select id="getFound" resultType="com.Tzj.lost_found_system.pojo.Found">
+        select found.*,u.name,s.status from found left join user u on found.userID = u.id left join status s on s.id=found.statusID
+        <where>
+            <if test="id!=null and id!=''">
+                found.id=#{id}
+            </if>
+            <if test="title!=null and title!=''">
+                and title like concat('%',#{title},'%')
+            </if>
+            <if test="description!=null and description!=''">
+                and description like concat('%',#{description},'%')
+            </if>
+            <if test="phone!=null and phone!=''">
+                and found.phone like concat('%',#{phone},'%')
+            </if>
+            <if test="userID!=null and userID!=''">
+                and userID=#{userID}
+            </if>
+            <if test="releaseDate!=null and releaseDate!=''">
+                and found.releaseDate=#{releaseDate}
+            </if>
+            <if test="statusID!=null and statusID!=''">
+                and found.statusID=#{statusID}
+            </if>
+        </where>
+        order by found.releaseDate desc
+    </select>
+</mapper>

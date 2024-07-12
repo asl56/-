@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.Tzj.lost_found_system.mapper.ContactMapper">
+    <insert id="addContact">
+    insert into contact
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+        <if test="content!=null and content!=''">
+            content
+        </if>
+        <if test="lostID!=null and lostID!=''">
+            ,lostID
+        </if>
+        <if test="userID!=null and userID!=''">
+            ,userID
+        </if>
+        <if test="foundID!=null and foundID!=''">
+            ,foundID
+        </if>
+
+    </trim>
+        values
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="content!=null and content!=''">
+                #{content}
+            </if>
+            <if test="lostID!=null and lostID!=''">
+                ,#{lostID}
+            </if>
+            <if test="userID!=null and userID!=''">
+                ,#{userID}
+            </if>
+            <if test="foundID!=null and foundID!=''">
+                ,#{foundID}
+            </if>
+        </trim>
+     </insert>
+
+
+    <select id="getContact" resultType="com.Tzj.lost_found_system.pojo.Contact">
+        SELECT contact.*,lost.*,user.*,status.status FROM contact,lost,user,status
+        <where>
+            <if test="id!=null and id!=''">
+                contact.id = #{id}
+            </if>
+            <if test="content!=null and content!=''">
+                and content like concat('%',#{content},'%')
+            </if>
+            <if test="contactTime!=null and contactTime!=''">
+                and contactTime = #{contactTime}
+            </if>
+            <if test="lostID!=null and lostID!=''">
+                and lostID = #{lostID}
+            </if>
+            <if test="userID!=null and userID!=''">
+                and contact.userID = #{userID}
+            </if>
+            <if test="itemsUserID!=null and itemsUserID!=''">
+                and lost.userID = #{itemsUserID}
+            </if>
+            and contact.lostID = lost.id
+            and lost.userID = user.id
+            and lost.statusID = status.id
+        </where>
+
+    </select>
+    <select id="getFoundContact" resultType="com.Tzj.lost_found_system.pojo.Contact">
+        SELECT contact.*,found.*,user.*,status.status FROM contact,found,user,status
+        <where>
+            <if test="id!=null and id!=''">
+                contact.id = #{id}
+            </if>
+            <if test="content!=null and content!=''">
+                and content like concat('%',#{content},'%')
+            </if>
+            <if test="contactTime!=null and contactTime!=''">
+                and contactTime = #{contactTime}
+            </if>
+            <if test="foundID!=null and foundID!=''">
+                and foundID = #{foundID}
+            </if>
+            <if test="userID!=null and userID!=''">
+                and contact.userID = #{userID}
+            </if>
+            <if test="itemsUserID!=null and itemsUserID!=''">
+                and found.userID = #{itemsUserID}
+            </if>
+                and contact.foundID = found.id
+                and found.userID = user.id
+                and found.statusID = status.id
+
+        </where>
+    </select>
+</mapper>

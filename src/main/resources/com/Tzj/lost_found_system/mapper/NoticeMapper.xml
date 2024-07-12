@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.Tzj.lost_found_system.mapper.NoticeMapper">
+    <update id="editNotice">
+        update notice
+        <set>
+            <if test="title!='' and title!=null">
+                title=#{title}
+            </if>
+            <if test="releaseDate!='' and releaseDate!=null">
+                , releaseDate=#{releaseDate}
+            </if>
+
+        </set>
+        where id=#{id}
+    </update>
+
+    <select id="getNotice" resultType="com.Tzj.lost_found_system.pojo.Notice">
+        select n.*, u.name
+        from notice n left join user u on  n.userID=u.id
+
+        <where>
+            <!--            id,title,releaseDate,userID-->
+            <if test="id!='' and id!=null">
+                id=#{id}
+            </if>
+            <if test="title!='' and title!=null">
+                and title like concat('%',#{title},'%')
+            </if>
+            <if test="releaseDate!='' and releaseDate!=null">
+                and releaseDate=#{releaseDate}
+            </if>
+            <if test="userID!='' and userID!=null">
+                and userID=#{userID}
+            </if>
+        </where>
+        ORDER BY n.id desc
+    </select>
+</mapper>
